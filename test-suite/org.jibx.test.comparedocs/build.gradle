@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'jibx'
+
+buildscript {
+    dependencies {
+        classpath "${project.group}:jibx-gradle-plugin:${project.version}"
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+dependencies {
+    compile "${project.group}:jibx-run:${project.version}"
+    compile "${project.group}:jibx-extras:${project.version}"
+    testCompile 'junit:junit:3.8.1'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+documentCompare {
+    inFile = 'src/test/resources/data.xml'
+    outFile = 'src/test/resources/data2.xml'
+}
+
+test.dependsOn documentCompare

@@ -1,0 +1,38 @@
+apply plugin: 'java'
+apply plugin: 'jibx'
+
+buildscript {
+    dependencies {
+        classpath "${project.group}:jibx-gradle-plugin:${project.version}"
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+dependencies {
+    compile "${project.group}:jibx-run:${project.version}"
+    compile "${project.group}:jibx-extras:${project.version}"
+    compile project(':base-binding-test:org.jibx.schema.person')
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+schemaCodegen.dependsOn tasks.getByPath(':base-binding-test:org.jibx.schema.person:schemaCodegen')
+
+schemaCodegen {
+    includeBaseBinding directory: '../org.jibx.schema.person/build/generated-sources', includes: ['binding.xml']
+    includeSchema 'address.xsd'
+}
+
+bind {
+    schemaBindingDirectory = 'build/generated-sources'
+    includeSchemaBinding 'binding.xml'
+}
+
+compileJava.dependsOn schemaCodegen
+classes.dependsOn bind

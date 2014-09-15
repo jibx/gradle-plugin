@@ -1,0 +1,14 @@
+apply plugin: 'java'
+
+dependencies {
+    testCompile project(':web-schema-test:org.jibx.schema.address')
+    testCompile project(':web-schema-test:org.jibx.schema.company')
+    testCompile project(':web-schema-test:org.jibx.schema.person')
+    testCompile "${project.group}:jibx-run:${project.version}"
+    testCompile 'junit:junit:4.11'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}

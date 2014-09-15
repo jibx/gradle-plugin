@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'jibx'
+
+buildscript {
+    dependencies {
+        classpath "${project.group}:jibx-gradle-plugin:${project.version}"
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+dependencies {
+    compile "${project.group}:jibx-run:${project.version}"
+    compile "${project.group}:jibx-extras:${project.version}"
+    testCompile 'junit:junit:3.8.1'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+jibx2Wsdl {
+    interfaceClassName 'com.sosnoski.ws.library.jibx2wsdl.BookServer1'
+    outputDirectory = "${project.buildDir}/classes/META-INF/schema"
+}
+
+test.dependsOn jibx2Wsdl

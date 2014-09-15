@@ -1,0 +1,46 @@
+apply plugin: 'java'
+apply plugin: 'jibx'
+
+buildscript {
+    dependencies {
+        classpath "${project.group}:jibx-gradle-plugin:${project.version}"
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+dependencies {
+    compile "${project.group}:jibx-run:${project.version}"
+    compile "${project.group}:jibx-extras:${project.version}"
+    compile project(':base-binding-test:org.jibx.schema.person')
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+task copyPersonBinding(type: Copy) {
+    from '../org.jibx.schema.person/build/generated-sources/person-binding.xml'
+    into './build/generated-sources/person-binding.xml'
+}
+
+schemaCodegen.dependsOn copyPersonBinding
+copyPersonBinding.dependsOn tasks.getByPath(':web-schema-test:org.jibx.schema.person:schemaCodegen')
+
+schemaCodegen {
+    option 'binding-file-name': 'address-binding.xml'
+    schemaLocation = 'http://www.jibx.org/sampleschema/'
+    includeSchema 'address.xsd'
+    includeBaseBinding directory: './build/generated-sources', includes: ['person-binding.xml']
+}
+
+bind {
+    schemaBindingDirectory = 'build/generated-sources'
+    includeSchemaBinding 'address-binding.xml'
+}
+
+compileJava.dependsOn schemaCodegen
+classes.dependsOn bind

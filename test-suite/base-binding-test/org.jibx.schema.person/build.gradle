@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'jibx'
+
+buildscript {
+    dependencies {
+        classpath "${project.group}:jibx-gradle-plugin:${project.version}"
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+dependencies {
+    compile "${project.group}:jibx-run:${project.version}"
+    compile "${project.group}:jibx-extras:${project.version}"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+bind {
+    schemaBindingDirectory = 'build/generated-sources'
+    includeSchemaBinding 'binding.xml'
+}
+
+compileJava.dependsOn schemaCodegen
+classes.dependsOn bind
